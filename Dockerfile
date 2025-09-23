@@ -1,20 +1,20 @@
-# Use official Node.js LTS (replace 20 with your required version)
-FROM node:20-alpine
+# Use official Python image (replace 3.12 with your version)
+FROM python:3.12-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy requirements first (for better caching)
+COPY requirements.txt .
 
-# Install dependencies (only production deps in final image)
-RUN npm ci --omit=dev
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source code
+# Copy application code
 COPY . .
 
-# Expose app port
-EXPOSE 3000
+# Expose port (Flask default)
+EXPOSE 5000
 
-# Start the app
-CMD ["node", "server.js"]
+# Run app
+CMD ["python", "app.py"]
