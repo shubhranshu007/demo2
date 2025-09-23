@@ -1,12 +1,20 @@
-FROM openjdk:17-jdk-slim
+# Use official Node.js LTS (replace 20 with your required version)
+FROM node:20-alpine
 
+# Set working directory
 WORKDIR /app
 
-# Copy JAR into container
-COPY app.jar app.jar
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-# Expose port (adjust if your app uses another one)
-EXPOSE 8080
+# Install dependencies (only production deps in final image)
+RUN npm ci --omit=dev
 
-# Run the JAR
-CMD ["java", "-jar", "app.jar"]
+# Copy source code
+COPY . .
+
+# Expose app port
+EXPOSE 3000
+
+# Start the app
+CMD ["node", "server.js"]
