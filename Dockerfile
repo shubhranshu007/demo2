@@ -1,20 +1,12 @@
-# Use official Node.js LTS (replace 20 with your required version)
-FROM node:20-alpine
-
-# Set working directory
+FROM openjdk:21-jdk-slim
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install dependencies (only production deps in final image)
-RUN npm ci --omit=dev
-
-# Copy source code
-COPY . .
+# Copy your built JAR file
+COPY app.jar app.jar
 
 # Expose app port
-EXPOSE 3000
+EXPOSE 8080
 
-# Start the app
-CMD ["node", "server.js"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
