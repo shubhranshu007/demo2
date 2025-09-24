@@ -1,18 +1,15 @@
-# Use the official Node.js image
-FROM node:18-alpine
+# Use official Ruby image
+FROM ruby:3.2
 
-# Set the working directory
+# Install Sinatra
+RUN gem install sinatra
+
+# Copy app
 WORKDIR /app
+COPY app.rb .
 
-# Copy package.json and install dependencies
-COPY package.json package-lock.json ./
-RUN npm install
+# Expose port
+EXPOSE 4567
 
-# Copy the application code and public assets
-COPY . .
-
-# Expose port 3000
-EXPOSE 3000
-
-# Start the app
-CMD ["node", "server.js"]
+# Run the app
+CMD ["ruby", "app.rb", "-o", "0.0.0.0"]
